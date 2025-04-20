@@ -1,0 +1,84 @@
+[workspace]
+members = [
+    "src/layers/otlp-stdout-kinesis-extension",
+    "src/functions/app-backend",
+    "src/functions/app-frontend",
+    "src/functions/client-rust",
+    "src/functions/otlp-forwarder-cwl",
+    "src/functions/otlp-forwarder-kinesis",
+]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.85.0"
+
+[workspace.dependencies]
+# AWS related
+aws-config = { version = "1.6.0", features = ["behavior-version-latest"] }
+aws-credential-types = "1.2.2"
+aws-sdk-dynamodb = "1.43.0"
+aws-sdk-kinesis = { version = "1", default-features = false, features = ["rt-tokio"] }
+aws-sdk-secretsmanager = { version = "1.66.0", features = ["behavior-version-latest"] }
+aws-smithy-runtime-api = { version = "1.7.4", features = ["http-1x"] }
+aws_lambda_events = { version = "0.16.0", default-features = false, features = ["alb", "apigw", "cloudwatch_logs", "kinesis", "sqs"] }
+lambda-extension = { version = "0.11.0" }
+lambda_runtime = { version = "0.13.0", features = ["anyhow", "tracing", "opentelemetry"] }
+serde_dynamo = { version = "4.2.14", features = ["aws-sdk-dynamodb+1"] }
+
+# HTTP and networking
+http = "1.3.1"
+reqwest = { version = "0.12.15", default-features = false, features = ["json", "rustls-tls"] }
+reqwest-middleware = "0.4.1"
+reqwest-tracing = { version = "0.5.6", features = ["opentelemetry_0_28"] }
+url = "2.5.3"
+
+# Serverless-OTLP-Forwarder
+lambda-lw-http-router = "0.3.0"
+lambda-otel-lite = "0.13.1"
+otlp-sigv4-client = "0.10.0"
+otlp-stdout-client = "0.4.1"
+otlp-stdout-logs-processor = { path = "src/functions/otlp-forwarder-cwl" }
+otlp-stdout-span-exporter = "0.13.0"
+
+# OpenTelemetry
+opentelemetry = { version = "0.28.0", features = ["trace"] }
+opentelemetry-aws = { version = "0.16.0", features = ["detector-aws-lambda"] }
+opentelemetry-http = { version = "0.28.0" }
+opentelemetry-otlp = { version = "0.28.0", features = ["http-proto", "http-json", "reqwest-client"] }
+opentelemetry-proto = { version = "0.28.0", features = ["gen-tonic", "trace"] }
+opentelemetry_sdk = { version = "0.28.0", features = ["rt-tokio"] }
+tracing = { version = "0.1", features = ["log"] }
+tracing-opentelemetry = "0.29.0"
+
+# Runtime and async
+async-trait = "0.1.88"
+futures = "0.3.31"
+futures-util = "0.3.31"
+tokio = { version = "1", features = ["full"] }
+
+# Serialization and utils
+anyhow = "1.0.97"
+base64 = "0.22.1"
+chrono = "0.4.40"
+flate2 = "1.0"
+lazy_static = "1.5.0"
+prost = "0.13.5"
+rand = "0.9.0"
+regex = "1.11.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.140"
+sha2 = "0.10.8"
+tera = "1.20.0"
+thiserror = "2.0.12"
+uuid = { version = "1.16", features = ["v4"] }
+
+# Testing and development
+mockito = "1.2.0"
+wiremock = "0.6.0"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

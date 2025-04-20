@@ -1,0 +1,15 @@
+[package]
+name = "otlp-stdout-kinesis-extension-layer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+aws-config.workspace = true
+aws-sdk-kinesis.workspace = true
+chrono.workspace = true
+lambda-extension.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+uuid.workspace = true
